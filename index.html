@@ -1,5 +1,12 @@
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Great storytelling in only 2 minutes - browse our collection of short films">
+    <meta property="og:title" content="2MinuteMovie">
+    <meta property="og:description" content="Great storytelling in only 2 minutes">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://2minutemovie.com">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
     <link
       rel="stylesheet"
@@ -8,22 +15,106 @@
       href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
     />
 
-    <title>Stitch Design</title>
+    <title>2MinuteMovie</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            screens: {
+              'sm': '640px',
+              'md': '768px',
+              'lg': '1024px',
+              'xl': '1280px',
+              '2xl': '1536px',
+            },
+          }
+        }
+      }
+    </script>
+    
+    <style>
+      /* Comment section styles */
+      .comment-section {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      
+      .comment-section.open {
+        max-height: 500px;
+        overflow-y: auto;
+      }
+      
+      /* Vote button active state */
+      .voted {
+        color: #e82630 !important;
+      }
+      
+      /* Animation for buttons */
+      .btn-hover:hover {
+        transform: scale(1.05);
+        transition: transform 0.2s ease;
+      }
+      
+      /* Media queries for responsive design */
+      @media (min-width: 768px) {
+        .movie-container {
+          display: flex;
+          flex-direction: row;
+          gap: 2rem;
+        }
+        .movie-info {
+          flex: 3;
+        }
+        .movie-thumbnail {
+          flex: 2;
+        }
+      }
+      
+      @media (min-width: 1024px) {
+        .movies-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <div
       class="relative flex size-full min-h-screen flex-col bg-[#221112] dark justify-between group/design-root overflow-x-hidden"
       style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'
     >
+      <!-- Mobile Navigation Sidebar -->
+      <div id="mobileNav" class="fixed top-0 left-0 w-64 h-full bg-[#2d1718] transform -translate-x-full transition-transform duration-300 ease-in-out z-50 shadow-lg">
+        <div class="flex justify-end p-4">
+          <button id="closeNav" class="text-white hover:text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+            </svg>
+          </button>
+        </div>
+        <nav class="px-4 py-2">
+          <ul class="space-y-4">
+            <li><a href="#" class="block text-white hover:text-[#e82630] font-bold py-2">Home</a></li>
+            <li><a href="#" class="block text-white hover:text-[#e82630] font-bold py-2">Browse Movies</a></li>
+            <li><a href="#" class="block text-white hover:text-[#e82630] font-bold py-2">Submit Movie</a></li>
+            <li><a href="#" class="block text-white hover:text-[#e82630] font-bold py-2">About Us</a></li>
+            <li><a href="#" class="block text-white hover:text-[#e82630] font-bold py-2">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      
       <div>
-        <div class="flex items-center bg-[#221112] p-4 pb-2 justify-between">
-          <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12">2MinuteMovie</h2>
+        <div class="flex items-center bg-[#221112] p-4 pb-2 justify-between sticky top-0 z-40">
+          <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center md:text-left md:pl-0 pl-12">2MinuteMovie</h2>
           <div class="flex w-12 items-center justify-end">
             <button
-              class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
+              id="menuButton"
+              class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0 hover:bg-[#472426] transition-colors"
             >
               <div class="text-white" data-icon="List" data-size="24px" data-weight="regular">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
@@ -44,17 +135,10 @@
                 <p class="text-white text-base font-bold leading-tight">The Last Laugh</p>
                 <p class="text-[#c89396] text-sm font-normal leading-normal">A comedian's final performance.</p>
               </div>
-              <button
-                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 flex-row-reverse bg-[#472426] text-white pr-2 gap-1 text-sm font-medium leading-normal w-fit"
-              >
-                <div class="text-white" data-icon="ChatCircleDots" data-size="18px" data-weight="regular">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
-                    <path
-                      d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
                     ></path>
                   </svg>
                 </div>
-                <span class="truncate">123</span>
+                <span class="truncate comment-count" data-movie-id="movie1">123</span>
               </button>
             </div>
             <div
@@ -93,13 +177,6 @@
                 <p class="text-white text-base font-bold leading-tight">Midnight Run</p>
                 <p class="text-[#c89396] text-sm font-normal leading-normal">A thrilling chase through the city.</p>
               </div>
-              <button
-                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-8 px-4 flex-row-reverse bg-[#472426] text-white pr-2 gap-1 text-sm font-medium leading-normal w-fit"
-              >
-                <div class="text-white" data-icon="ChatCircleDots" data-size="18px" data-weight="regular">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
-                    <path
-                      d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
                     ></path>
                   </svg>
                 </div>
@@ -294,5 +371,157 @@
       </div>
       <div><div class="h-5 bg-[#221112]"></div></div>
     </div>
-  </body>
+  
+<!-- JavaScript for interactivity -->
+<script>
+  // DOM elements
+  const menuButton = document.getElementById("menuButton");
+  const mobileNav = document.getElementById("mobileNav");
+  const closeNav = document.getElementById("closeNav");
+  const thumbsUpButtons = document.querySelectorAll("[data-icon=\"ThumbsUp\"]");
+  const thumbsDownButtons = document.querySelectorAll("[data-icon=\"ThumbsDown\"]");
+  const commentButtons = document.querySelectorAll("[data-icon=\"ChatCircleDots\"]");
+  
+  // Mobile menu toggle
+  menuButton.addEventListener("click", () => {
+    mobileNav.classList.remove("-translate-x-full");
+  });
+  
+  closeNav.addEventListener("click", () => {
+    mobileNav.classList.add("-translate-x-full");
+  });
+  
+  // Initialize vote counts from localStorage
+  function initializeVotes() {
+    const votes = JSON.parse(localStorage.getItem("2MinuteMovieVotes")) || {};
+    
+    // Update vote counts and styling based on localStorage
+    thumbsUpButtons.forEach((button, index) => {
+      const movieId = `movie${index + 1}`;
+      if (votes[movieId] === "up") {
+        button.classList.add("voted");
+      }
+    });
+    
+    thumbsDownButtons.forEach((button, index) => {
+      const movieId = `movie${index + 1}`;
+      if (votes[movieId] === "down") {
+        button.classList.add("voted");
+      }
+    });
+  }
+  
+  // Handle thumbs up clicks
+  thumbsUpButtons.forEach((button, index) => {
+    const movieId = `movie${index + 1}`;
+    const countElement = button.nextElementSibling;
+    
+    button.addEventListener("click", () => {
+      const votes = JSON.parse(localStorage.getItem("2MinuteMovieVotes")) || {};
+      const thumbsDownButton = thumbsDownButtons[index];
+      
+      // If already voted up, remove vote
+      if (votes[movieId] === "up") {
+        votes[movieId] = null;
+        button.classList.remove("voted");
+        countElement.textContent = parseInt(countElement.textContent) - 1;
+      } 
+      // If voted down, switch vote
+      else if (votes[movieId] === "down") {
+        votes[movieId] = "up";
+        button.classList.add("voted");
+        thumbsDownButton.classList.remove("voted");
+        thumbsDownButton.nextElementSibling.textContent = 
+          parseInt(thumbsDownButton.nextElementSibling.textContent) - 1;
+        countElement.textContent = parseInt(countElement.textContent) + 1;
+      } 
+      // If not voted, add vote
+      else {
+        votes[movieId] = "up";
+        button.classList.add("voted");
+        countElement.textContent = parseInt(countElement.textContent) + 1;
+      }
+      
+      localStorage.setItem("2MinuteMovieVotes", JSON.stringify(votes));
+    });
+  });
+  
+  // Handle thumbs down clicks
+  thumbsDownButtons.forEach((button, index) => {
+    const movieId = `movie${index + 1}`;
+    const countElement = button.nextElementSibling;
+    
+    button.addEventListener("click", () => {
+      const votes = JSON.parse(localStorage.getItem("2MinuteMovieVotes")) || {};
+      const thumbsUpButton = thumbsUpButtons[index];
+      
+      // If already voted down, remove vote
+      if (votes[movieId] === "down") {
+        votes[movieId] = null;
+        button.classList.remove("voted");
+        countElement.textContent = parseInt(countElement.textContent) - 1;
+      } 
+      // If voted up, switch vote
+      else if (votes[movieId] === "up") {
+        votes[movieId] = "down";
+        button.classList.add("voted");
+        thumbsUpButton.classList.remove("voted");
+        thumbsUpButton.nextElementSibling.textContent = 
+          parseInt(thumbsUpButton.nextElementSibling.textContent) - 1;
+        countElement.textContent = parseInt(countElement.textContent) + 1;
+      } 
+      // If not voted, add vote
+      else {
+        votes[movieId] = "down";
+        button.classList.add("voted");
+        countElement.textContent = parseInt(countElement.textContent) + 1;
+      }
+      
+      localStorage.setItem("2MinuteMovieVotes", JSON.stringify(votes));
+    });
+  });
+  
+  // Create and append comment sections
+  function createCommentSections() {
+    const movieContainers = document.querySelectorAll(".p-4");
+    
+    commentButtons.forEach((button) => {
+      const movieContainer = button.closest(".p-4");
+      
+      // Create comment section if it doesn\"t exist
+      if (!movieContainer.querySelector(".comment-section")) {
+        const commentSection = document.createElement("div");
+        commentSection.className = "comment-section mt-2 p-3 bg-[#2d1718] rounded-lg";
+        commentSection.innerHTML = `
+          <h3 class="text-white text-sm font-bold mb-2">Comments</h3>
+          <div class="comments-container mb-3">
+            <p class="text-[#c89396] text-xs italic">No comments yet. Be the first to comment!</p>
+          </div>
+          <div class="comment-form">
+            <textarea placeholder="Add a comment..." 
+              class="w-full p-2 rounded bg-[#472426] text-white text-sm mb-2 border border-[#c89396] focus:outline-none focus:border-[#e82630]"></textarea>
+            <button class="bg-[#e82630] text-white text-xs font-bold py-1 px-3 rounded">Post Comment</button>
+          </div>
+        `;
+        
+        movieContainer.appendChild(commentSection);
+      }
+      
+      // Add click event to toggle comment section
+      button.addEventListener("click", () => {
+        const commentSection = movieContainer.querySelector(".comment-section");
+        commentSection.classList.toggle("open");
+      });
+    });
+  }
+  
+  // Initialize everything on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeVotes();
+    createCommentSections();
+  });
+</script>
+
+</body>
 </html>
+
